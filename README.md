@@ -1,31 +1,150 @@
 # FLAT - Facial Landmarks Annotation Tool
 
-A visual editor for manually annotating facial landmarks in images of human faces.
+KeyPointをAnnotationするToolのForkです。
 
-![Screenshot](screenshot.png)
+![Screenshot](screenshot/01.png)
 
-## Usage
+<br/>
+<br/>
 
-Create a new face annotation dataset (files with extension `.fad`) and add the face images. Then, add the facial features and connect then as desired using either the program menus or the context menu. The zoom level can be controlled either from the widget control on the image properties tool window or by holding CTRL and scrolling the mouse wheel. While zoomed, an image can also be side scrolled by holding SHIFT and scrolling the mouse wheel. All images in the same face annotation dataset share the same model, that is they have the same amount of face landmarks (even though they can be differently positioned for each image). Automatically fitting of 66 face landmarks can be performed via the "Fit Landmarks" option if the utility is available (see details bellow). If the automatic fitting succeeds, the 66 landmarks will be positioned as best as possible in the face image. Otherwise, a status bar message will indicate the error.
+## 環境構築方法
 
-## Dependences
+### 1. コンパイル
 
-The application has been developed and tested with:
+リポジトリ直下で、以下コマンドを実施します。
 
-- [CMake](https://cmake.org/) 3.5.0-rc3
-- [Qt](http://www.qt.io/) 5.5.1 32-bit
+```
+cmake CMakeLists.txt
+make
+```
 
-The "Fit Landmarks" menu option (in "Tools/CSIRO Face Analysis SDK" menu) requires an external executable called `fit-fit(.exe)` - even though its absence does not prevent the FLAT tool from being compiled and used. Please check the [SDK web site](http://face.ci2cv.net/) and [the source code of my port to Windows/Linux](https://github.com/luigivieira/face-analysis-sdk). The option for an external dependence (instead of source code integration) is only to make the compilation of this project simpler and its usage broader.
+コマンド実施すると、warningなんかがチョイチョイ出つつも、`flat`という名前のUnix実行ファイルが作成されます。
 
-## Building
+<br/>
 
-1. Use CMake to configure and generate the environment. I suggest using the folder `build`, since it is the one ignored by gitignore.
-2. In Windows, open the Visual Studio solution and build with the desired build type (*debug*, *release*, etc).
-3. In Linux, use type `make` to let the Makefile produce the binary in the build type configured by CMake.
-4. The code produces only a single executable named `flat(.exe)`, that depends only on Qt. If you want to use the "Fit Landmarks" option mentioned before, go to the CSIRO Face Analysis SDK page, download and build its libraries and executables. Then, configure in FLAT the path for the `face-fit(.exe)` executable.
+### 2. ツール起動
 
-## Credits
+手順1.にて作成した`flat`をダブルクリックなりで実行します。
+すると、以下のようなWindowが起動されます。
 
-Copyright (C) 2016 [Luiz Carlos Vieira](http://www.luiz.vieira.nom.br). Available under GPL (see details in the license file).
+![Screenshot](screenshot/02.png)
 
-The application icons and images are either from or based on the Oxygen Icons Set, downloaded as [PNGs from Felipe Azevedo (pasnox)](https://github.com/pasnox/oxygen-icons-png) and [licensed under LGPL from KDE](https://techbase.kde.org/Projects/Oxygen/Licensing), and the [Farm-Fresh Web Icons Set](http://www.fatcow.com/free-icons), licensed under [Creative Commons (CC BY 4.0)](http://creativecommons.org/licenses/by/4.0/).
+<br/>
+<br/>
+
+## ツール使用方法
+
+### 1. datasetを作成する
+
+ツールを起動したら、左上のdataset作成ボタンを押して、datasetタブを作成します。
+
+![Screenshot](screenshot/03.png)
+
+datasetは、複数枚の画像において、共通のkeypointを共有するannotation群のことです。
+
+<br/>
+
+### 2. datasetに所属する画像を選択する
+
+datasetタブを作成したら、imageListの追加ボタンを押します。
+imageListの追加ボタンを押すと、datasetに所属する画像を選択すべく、ダイアログが起動されます。
+
+![Screenshot](screenshot/04.png)
+
+エクスプローラー上で、datasetに所属させたい画像を選択し、「Open」ボタンを押します。
+
+![Screenshot](screenshot/05.png)
+
+すると、imageList上に選択された画像がラインナップされます。
+メイン画面上には、その内の1枚が表示されます。
+
+![Screenshot](screenshot/06.png)
+
+<br/>
+
+### 3. keypointを追加する
+
+画像を選択したら、いよいよkeypointを追加していきます。
+マウスのカーソルを、keypointを追加したい位置まで運び、右クリックを押します。
+右クリックメニューの中から、「Add」を選択します。
+
+![Screenshot](screenshot/07.png)
+
+そうすると、keypointが追加されます。
+
+![Screenshot](screenshot/08.png)
+
+このキーポイントは、マウスのドラッグで動かすことができます。
+
+![Screenshot](screenshot/09.png)
+
+同様にして、keypointを増やしていきます。
+
+![Screenshot](screenshot/10.png)
+
+<br/>
+
+### 4. keypointを連結する
+
+keypointが増えてくると、それぞれの意味を追跡しづらくなってきます。
+その対策として、keypoint間の関係性を示す連結線を追加しましょう。
+必ずも必要なものではないですが、沢山の画像でannotationを行った際に、ジワジワありがたくなってくるオペレーションです。
+
+<br/>
+
+連結線を繋ぐには、先ず、対象の2点を選択します。
+
+![Screenshot](screenshot/11.png)
+
+次に、上部メニューにある「Link」ボタンを押します。
+これで、点が線で連結されます。
+
+![Screenshot](screenshot/12.png)
+
+<br/>
+
+### 5. keypoint情報を保存する
+
+keypointが配置できたら、その情報を保存します。
+上部メニューにある保存のボタンを押します。
+そうすると、ファイル保存用のダイアログが起動されます。
+
+![Screenshot](screenshot/13.png)
+
+ファイル名を入力し、「Save」ボタンを押します。
+
+![Screenshot](screenshot/14.png)
+
+そうすると、ファイルにkeypoint情報が出力されます。
+
+![Screenshot](screenshot/15.png)
+
+<br/>
+
+### 6. 別画像にて、keypointを編集する
+
+別の画像で、keypointを編集するために、メニューにある「List」ボタンを押します。
+すると、keypoint横にインデックス番号が表示されます。
+
+![Screenshot](screenshot/16.png)
+
+その状態で、imageListにある別画像を選択します。
+そうすると、keypointの数や、連結線の概念はそのままに、別画像に切り替わります。
+
+![Screenshot](screenshot/17.png)
+
+別画像においても、同様にkeypointの位置を調整します。
+
+![Screenshot](screenshot/18.png)
+
+これを対象画像全てに対して実施して、keypoint情報を保存すれば、annotation作業完了です。
+
+<br/>
+
+## keypoint情報を、pythonで取り込む
+
+## 対象画像に対して前処理を実施する
+
+
+
+
