@@ -1,2 +1,10 @@
 # Ignore the build directory
 **/build/
+*.cmake
+CMakeCache.txt
+flat
+Makefile
+version.h
+CMakeFiles/*
+FLAT_autogen/*
+*.fad
